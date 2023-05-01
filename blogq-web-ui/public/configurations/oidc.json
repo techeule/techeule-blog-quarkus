@@ -1,0 +1,5 @@
+{
+  "url": "http://t12s-oidc-keycloak:28084",
+  "realm": "blogq",
+  "clientId": "blogq-web-ui-editor"
+}

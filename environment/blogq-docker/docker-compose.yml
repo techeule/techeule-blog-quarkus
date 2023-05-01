@@ -1,0 +1,72 @@
+version: '3.0'
+
+services:
+  blogq-quarkus:
+    container_name: blogq-quarkus
+    restart: on-failure
+    build:
+      context: ../../
+      dockerfile: ./blogq-backend/src/main/docker/Dockerfile.jvm
+    environment:
+      t12s.oidc-root: "http://t12s-oidc-keycloak:28084/realms/kblogq"
+    ports:
+      - "51080:51080"
+    networks:
+      blogq-network:
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:51080/q/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+
+  t12s-db-postgres:
+    container_name: blogq-sql-database
+    restart: on-failure
+    image: postgres:14.1
+    environment:
+      POSTGRES_USER: bytesandcodes
+      POSTGRES_PASSWORD: bytesandcodes-password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - "./blogq-sql-database:/docker-entrypoint-initdb.d"
+      - "blogq-database-postgres:/var/lib/postgresql/data"
+    ports:
+      - "25432:5432"
+    networks:
+      blogq-network:
+    healthcheck:
+      test: [ "CMD-SHELL", "psql '--user=bytesandcodes' '--dbname=oidc_keycloak' '--command=select 1'" ]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+
+  t12s-oidc-keycloak:
+    container_name: blogq-oidc-keycloak
+    restart: on-failure
+    image: quay.io/keycloak/keycloak:21.1.1
+    command:
+      - --config-file /opt/oidc/keycloak.conf start-dev --auto-build --db postgres
+    environment:
+      KEYCLOAK_ADMIN: hst-admin-user
+      KEYCLOAK_ADMIN_PASSWORD: hst-admin-password
+      TZ: Etc/UTC
+    volumes:
+      - "./keycloak/keycloak.conf:/opt/oidc/keycloak.conf"
+    ports:
+      - "28084:28084"
+    networks:
+      blogq-network:
+    depends_on:
+      - t12s-db-postgres
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --fail http://localhost:28084/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 10
+
+
+networks:
+  blogq-network:
+
+volumes:
+  blogq-database-postgres:
