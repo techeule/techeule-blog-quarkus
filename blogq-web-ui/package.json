@@ -6,16 +6,27 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "clean": "rm -rf dist || echo 'not \"dist\" folder exist'",
+    "browser-sync": "(cd dist && browser-sync --port 5173)",
+    "lint": "eslint \"**/*.{js,ts}\""
   },
   "devDependencies": {
+    "@types/node": "^20.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.59.6",
+    "@typescript-eslint/parser": "^5.59.6",
+    "browser-sync": "^2.29.1",
+    "eslint": "^8.40.0",
     "typescript": "^5.0.2",
-    "vite": "^4.3.2"
+    "vite": "^4.3.2",
+    "vite-plugin-dts": "^2.3.0"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
+    "@vaadin/router": "^1.7.5",
     "bulma": "^0.9.4",
-    "keycloak-js": "^21.1.1",
-    "lit-html": "^2.7.3"
+    "keycloak-js": "^22.0.1",
+    "lit": "^2.7.4",
+    "redux": "^4.2.1"
   }
 }

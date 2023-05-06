@@ -5,10 +5,12 @@ services:
     container_name: blogq-quarkus
     restart: on-failure
     build:
-      context: ../../
-      dockerfile: ./blogq-backend/src/main/docker/Dockerfile.jvm
+      context: ../../blogq-backend
+      dockerfile: ./src/main/docker/Dockerfile.jvm
     environment:
-      t12s.oidc-root: "http://t12s-oidc-keycloak:28084/realms/kblogq"
+      QUARKUS_PROFILE: 'dev,docker-compose'
+      T12S_OIDC_ROOT: "http://t12s-oidc-keycloak:28084/realms/blogq"
+      # QUARKUS_LOG_LEVEL: ALL
     ports:
       - "51080:51080"
     networks:
@@ -22,7 +24,7 @@ services:
   t12s-db-postgres:
     container_name: blogq-sql-database
     restart: on-failure
-    image: postgres:14.1
+    image: postgres:15-bookworm
     environment:
       POSTGRES_USER: bytesandcodes
       POSTGRES_PASSWORD: bytesandcodes-password
@@ -43,7 +45,7 @@ services:
   t12s-oidc-keycloak:
     container_name: blogq-oidc-keycloak
     restart: on-failure
-    image: quay.io/keycloak/keycloak:21.1.1
+    image: quay.io/keycloak/keycloak:22.0.1
     command:
       - --config-file /opt/oidc/keycloak.conf start-dev --auto-build --db postgres
     environment:
@@ -64,9 +66,40 @@ services:
       timeout: 5s
       retries: 10
 
+  t12s-blogq-dynamodb:
+    container_name: t12s-blogq-dynamodb
+    build:
+      context: ./dynamodb
+      dockerfile: Dockerfile
+    command: "-jar DynamoDBLocal.jar -port 28091 -sharedDb -dbPath /home/dynamodblocal/data"
+    working_dir: "/home/dynamodblocal"
+    user: "dynamodblocal:dynamodblocal"
+    volumes:
+      - "t12s-blogq-dynamodb:/home/dynamodblocal/data"
+    restart: always
+    ports:
+      - "28091:28091"
+    networks:
+      blogq-network:
+
+  t12s-blogq-db-init:
+    container_name: t12s-blogq-init
+    build:
+      context: ./db-initializer
+      dockerfile: Dockerfile
+    restart: on-failure
+    environment:
+      DYNAMODB_ENDPOINT: "http://t12s-blogq-dynamodb:28091"
+      AWS_ACCESS_KEY_ID: 'DUMMYIDEXAMPLE'
+      AWS_SECRET_ACCESS_KEY: 'DUMMYEXAMPLEKEY'
+    depends_on:
+      - t12s-blogq-dynamodb
+    networks:
+      blogq-network:
 
 networks:
   blogq-network:
 
 volumes:
   blogq-database-postgres:
+  t12s-blogq-dynamodb:

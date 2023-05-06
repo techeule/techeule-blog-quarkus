@@ -1,21 +1,18 @@
-import {doLogin, getJwtToken, getUser, isLoggedIn} from "./auth/control/Oidc";
+import "bulma/css/bulma.min.css";
+import "./redux/control/ApplicationStore.ts";
+import "./ComponentsAndElements.ts";
+import oidcService from "./auth/control/OidcService.ts";
+import {dispatchLogin} from "./auth/control/AuthDispatchers.ts";
+import configurationService from "./configuration/control/ConfigurationService.ts";
 
-if (!isLoggedIn()) {
-  if (await doLogin()) {
-    console.log({isLoggedIn: true, jwt: getJwtToken()})
-  } else {
-    console.log({isLoggedIn: false, jwt: getJwtToken()})
+const onAuthenticatedCallback = async () => {
+  if (oidcService.isLoggedIn()) {
+    oidcService.getUser().then(u => dispatchLogin(u));
   }
-}
+  await import('./navigation/control/ApplicationRouter.ts');
+};
 
-console.log(getJwtToken())
-console.log(getUser())
-
-document.write(`<h1>Token</h1>`)
-document.write(`<code><pre>${JSON.stringify(getJwtToken(), null, 2)}</pre></code>`)
-
-document.write(`<h1>User Info</h1>`)
-document.write(`<code><pre>${JSON.stringify(getUser().userInfo, null, 2)}</pre></code>`)
-
-document.write(`<h1>User Profile</h1>`)
-document.write(`<code><pre>${JSON.stringify(getUser().userProfile, null, 2)}</pre></code>`)
+oidcService.init(onAuthenticatedCallback).then(_ => {
+  const appInfo = `${configurationService.applicationName} - version ${configurationService.applicationVersion}`;
+  console.log(`application (${appInfo}) initialisation completed!`)
+});

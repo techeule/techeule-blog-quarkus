@@ -28,7 +28,7 @@ At [TechEule.com](https://techeule.com/) you can find more info about this repos
 ### Build the Docker image
 
 ```shell
-docker build --progress plain -t t12s/t12s-automator-quarkus -f ./blogq-app/src/main/docker/simple.Dockerfile .
+docker build --progress plain -t t12s/t12s-blogq-quarkus -f ./blogq-app/src/main/docker/simple.Dockerfile .
 ```
 
 OR
@@ -36,7 +36,7 @@ OR
 ```shell
 ./mvnw clean package -DskipTests
 
-docker build --progress plain -t t12s/t12s-automator-quarkus -f ./blogq-app/src/main/docker/simple.Dockerfile .
+docker build --progress plain -t t12s/t12s-blogq-quarkus -f ./blogq-app/src/main/docker/simple.Dockerfile .
 ```
 
 ## System Test
@@ -51,7 +51,7 @@ Wait until the service get deployed and available at `http://localhost:18090/q/h
 
 ```shell
 # Quarkus
-./mvnw -V -T 1C clean test-compile failsafe:integration-test failsafe:verify -pl :t12s-automator-st -Dmp.config.profile=quarkus
+./mvnw -V -T 1C clean test-compile failsafe:integration-test failsafe:verify -pl :t12s-blogq-st -Dmp.config.profile=quarkus
 ```
 
 ### Pre-push check
@@ -60,7 +60,7 @@ Wait until the service get deployed and available at `http://localhost:18090/q/h
 ./mvnw -V -T 1C clean package && \
 ./environment/build-and-start-env.sh && \
 sleep 20 && \
-./mvnw -V -T 1C failsafe:integration-test failsafe:verify -pl :t12s-automator-st -Dmp.config.profile=quarkus && \
+./mvnw -V -T 1C failsafe:integration-test failsafe:verify -pl :blogq-st -Dmp.config.profile=quarkus && \
 ./environment/stop-infra.sh
 ```
 

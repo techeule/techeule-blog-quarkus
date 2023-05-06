@@ -8,8 +8,8 @@ ALTER DATABASE oidc_keycloak OWNER TO "oidc_keycloak";
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.1 (Debian 14.1-1.pgdg110+1)
--- Dumped by pg_dump version 14.7 (Homebrew)
+-- Dumped from database version 15.3 (Debian 15.3-1.pgdg120+1)
+-- Dumped by pg_dump version 15.3 (Homebrew)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -1866,11 +1866,6 @@ INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id,
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('6e480bec-2e0b-4fd2-a0c7-1001e1ef2e03', NULL, 'auth-otp-form', 'master', '13aa149f-91d2-4093-892c-838cadc47d57', 0, 20, false, NULL, NULL);
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('971313b3-d380-4b52-9efb-b3b3377bd689', NULL, 'http-basic-authenticator', 'master', 'c040248f-67c1-4f46-8764-d667f4c5bfc6', 0, 10, false, NULL, NULL);
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('f83d0794-8c40-47d5-803d-9fecf140d59b', NULL, 'docker-http-basic-authenticator', 'master', 'c4f9c3d4-5ad3-4896-8690-584b1e42ed60', 0, 10, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('ed1e284c-c6a7-4f74-bfe8-c6b3318aab6c', NULL, 'no-cookie-redirect', 'master', '49ef8416-e4b7-4f47-ae6c-1f2176501172', 0, 10, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('ab8bda9e-5090-48c7-bd75-707236508ff3', NULL, NULL, 'master', '49ef8416-e4b7-4f47-ae6c-1f2176501172', 0, 20, true, 'e8a72860-83f6-4b45-9033-daf47936b421', NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('97d0148c-f8db-406d-802f-9e4b37f76727', NULL, 'basic-auth', 'master', 'e8a72860-83f6-4b45-9033-daf47936b421', 0, 10, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('adaca099-c34c-4efc-bff4-66158c1c3729', NULL, 'basic-auth-otp', 'master', 'e8a72860-83f6-4b45-9033-daf47936b421', 3, 20, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('ea312e39-011f-49ac-9bef-116d55438dd2', NULL, 'auth-spnego', 'master', 'e8a72860-83f6-4b45-9033-daf47936b421', 3, 30, false, NULL, NULL);
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('739bc505-da17-43e2-b6fb-abbe196a6351', NULL, 'auth-cookie', '2b937222-9615-437f-bf8d-0e73191e2c82', 'ea783d6e-71a8-4ec0-95d3-de93642601a7', 2, 10, false, NULL, NULL);
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('7a148183-e3c9-43ed-8358-58dfbd117472', NULL, 'auth-spnego', '2b937222-9615-437f-bf8d-0e73191e2c82', 'ea783d6e-71a8-4ec0-95d3-de93642601a7', 3, 20, false, NULL, NULL);
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('949dd1a9-213d-45d6-b648-5c5ce92f4536', NULL, 'identity-provider-redirector', '2b937222-9615-437f-bf8d-0e73191e2c82', 'ea783d6e-71a8-4ec0-95d3-de93642601a7', 2, 25, false, NULL, NULL);
@@ -1913,11 +1908,6 @@ INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id,
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('2e2bfa7c-0bd8-4cdc-af2e-ff1be94ac314', NULL, 'auth-otp-form', '2b937222-9615-437f-bf8d-0e73191e2c82', '053f053a-276b-4d9d-82b2-9f5b05de1174', 0, 20, false, NULL, NULL);
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('fc3fb430-d227-4f40-a90a-731d0d85c247', NULL, 'http-basic-authenticator', '2b937222-9615-437f-bf8d-0e73191e2c82', '57fb291b-12a9-4709-b505-511df18c7dd5', 0, 10, false, NULL, NULL);
 INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('e27bde11-ee5e-4a62-982a-7bf658cdb2ec', NULL, 'docker-http-basic-authenticator', '2b937222-9615-437f-bf8d-0e73191e2c82', 'ce37689c-d4d4-4aff-abe2-85e0073edfd7', 0, 10, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('2b43f9c7-54a0-4e73-a6cc-0f007591718f', NULL, 'no-cookie-redirect', '2b937222-9615-437f-bf8d-0e73191e2c82', 'cdeca037-6e23-4f6e-86b8-7fdcf11309b1', 0, 10, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('c9db4357-c663-4021-b6f0-5b2828287562', NULL, NULL, '2b937222-9615-437f-bf8d-0e73191e2c82', 'cdeca037-6e23-4f6e-86b8-7fdcf11309b1', 0, 20, true, '6a7730be-df51-4c06-b0e8-f7315a3afce3', NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('7aa5ef0d-8880-4ed8-865b-657871f0ddba', NULL, 'basic-auth', '2b937222-9615-437f-bf8d-0e73191e2c82', '6a7730be-df51-4c06-b0e8-f7315a3afce3', 0, 10, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('c7999935-3135-4d80-88ce-110b34b5d826', NULL, 'basic-auth-otp', '2b937222-9615-437f-bf8d-0e73191e2c82', '6a7730be-df51-4c06-b0e8-f7315a3afce3', 3, 20, false, NULL, NULL);
-INSERT INTO public.authentication_execution (id, alias, authenticator, realm_id, flow_id, requirement, priority, authenticator_flow, auth_flow_id, auth_config) VALUES ('20af758a-fc6f-49a5-a6a8-816ce9055db1', NULL, 'auth-spnego', '2b937222-9615-437f-bf8d-0e73191e2c82', '6a7730be-df51-4c06-b0e8-f7315a3afce3', 3, 30, false, NULL, NULL);
 
 
 --
@@ -1942,8 +1932,6 @@ INSERT INTO public.authentication_flow (id, alias, description, realm_id, provid
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('13aa149f-91d2-4093-892c-838cadc47d57', 'First broker login - Conditional OTP', 'Flow to determine if the OTP is required for the authentication', 'master', 'basic-flow', false, true);
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('c040248f-67c1-4f46-8764-d667f4c5bfc6', 'saml ecp', 'SAML ECP Profile Authentication Flow', 'master', 'basic-flow', true, true);
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('c4f9c3d4-5ad3-4896-8690-584b1e42ed60', 'docker auth', 'Used by Docker clients to authenticate against the IDP', 'master', 'basic-flow', true, true);
-INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('49ef8416-e4b7-4f47-ae6c-1f2176501172', 'http challenge', 'An authentication flow based on challenge-response HTTP Authentication Schemes', 'master', 'basic-flow', true, true);
-INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('e8a72860-83f6-4b45-9033-daf47936b421', 'Authentication Options', 'Authentication options.', 'master', 'basic-flow', false, true);
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('ea783d6e-71a8-4ec0-95d3-de93642601a7', 'browser', 'browser based authentication', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', true, true);
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('bf33e67b-7378-4670-bc9c-b69e2841c109', 'forms', 'Username, password, otp and other auth forms.', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', false, true);
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('4b9ff095-8e57-4236-9d01-e9b2b6dd20d2', 'Browser - Conditional OTP', 'Flow to determine if the OTP is required for the authentication', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', false, true);
@@ -1962,8 +1950,6 @@ INSERT INTO public.authentication_flow (id, alias, description, realm_id, provid
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('053f053a-276b-4d9d-82b2-9f5b05de1174', 'First broker login - Conditional OTP', 'Flow to determine if the OTP is required for the authentication', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', false, true);
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('57fb291b-12a9-4709-b505-511df18c7dd5', 'saml ecp', 'SAML ECP Profile Authentication Flow', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', true, true);
 INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('ce37689c-d4d4-4aff-abe2-85e0073edfd7', 'docker auth', 'Used by Docker clients to authenticate against the IDP', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', true, true);
-INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('cdeca037-6e23-4f6e-86b8-7fdcf11309b1', 'http challenge', 'An authentication flow based on challenge-response HTTP Authentication Schemes', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', true, true);
-INSERT INTO public.authentication_flow (id, alias, description, realm_id, provider_id, top_level, built_in) VALUES ('6a7730be-df51-4c06-b0e8-f7315a3afce3', 'Authentication Options', 'Authentication options.', '2b937222-9615-437f-bf8d-0e73191e2c82', 'basic-flow', false, true);
 
 
 --
@@ -2669,6 +2655,7 @@ INSERT INTO public.databasechangelog (id, author, filename, dateexecuted, ordere
 INSERT INTO public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) VALUES ('21.0.2-17277', 'keycloak', 'META-INF/jpa-changelog-21.0.2.xml', '2023-05-02 20:03:48.597515', 111, 'EXECUTED', '8:8806cb33d2a546ce770384bf98cf6eac', 'customChange', '', NULL, '4.16.1', NULL, NULL, '3057828356');
 INSERT INTO public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) VALUES ('21.1.0-19404', 'keycloak', 'META-INF/jpa-changelog-21.1.0.xml', '2023-05-02 20:03:48.645054', 112, 'EXECUTED', '8:fdb2924649d30555ab3a1744faba4928', 'modifyDataType columnName=DECISION_STRATEGY, tableName=RESOURCE_SERVER_POLICY; modifyDataType columnName=LOGIC, tableName=RESOURCE_SERVER_POLICY; modifyDataType columnName=POLICY_ENFORCE_MODE, tableName=RESOURCE_SERVER', '', NULL, '4.16.1', NULL, NULL, '3057828356');
 INSERT INTO public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) VALUES ('21.1.0-19404-2', 'keycloak', 'META-INF/jpa-changelog-21.1.0.xml', '2023-05-02 20:03:48.649526', 113, 'MARK_RAN', '8:1c96cc2b10903bd07a03670098d67fd6', 'addColumn tableName=RESOURCE_SERVER_POLICY; update tableName=RESOURCE_SERVER_POLICY; dropColumn columnName=DECISION_STRATEGY, tableName=RESOURCE_SERVER_POLICY; renameColumn newColumnName=DECISION_STRATEGY, oldColumnName=DECISION_STRATEGY_NEW, tabl...', '', NULL, '4.16.1', NULL, NULL, '3057828356');
+INSERT INTO public.databasechangelog (id, author, filename, dateexecuted, orderexecuted, exectype, md5sum, description, comments, tag, liquibase, contexts, labels, deployment_id) VALUES ('22.0.0-17484', 'keycloak', 'META-INF/jpa-changelog-22.0.0.xml', '2023-07-22 15:36:43.045948', 114, 'EXECUTED', '8:4c3d4e8b142a66fcdf21b89a4dd33301', 'customChange', '', NULL, '4.20.0', NULL, NULL, '0040203010');
 
 
 --
@@ -2930,6 +2917,7 @@ INSERT INTO public.migration_model (id, version, update_time) VALUES ('s68f3', '
 INSERT INTO public.migration_model (id, version, update_time) VALUES ('5hdmy', '18.0.1', 1655846867);
 INSERT INTO public.migration_model (id, version, update_time) VALUES ('4ysar', '18.0.2', 1656619270);
 INSERT INTO public.migration_model (id, version, update_time) VALUES ('522l4', '21.1.1', 1683057830);
+INSERT INTO public.migration_model (id, version, update_time) VALUES ('itpf7', '22.0.1', 1690040203);
 
 
 --

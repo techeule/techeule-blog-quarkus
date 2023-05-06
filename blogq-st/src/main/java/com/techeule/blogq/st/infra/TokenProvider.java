@@ -1,10 +1,12 @@
 package com.techeule.blogq.st.infra;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.rest.client.inject.RestClient;
-
+import io.smallrye.jwt.auth.principal.JWTParser;
+import io.smallrye.jwt.auth.principal.ParseException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.jwt.JsonWebToken;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 @ApplicationScoped
 public class TokenProvider {
@@ -48,9 +50,20 @@ public class TokenProvider {
   @ConfigProperty(name = "user.publisher.password")
   String publisherPassword;
 
+  @Inject
+  JWTParser parser;
+
   public String getAdminAccessToken() {
     return oidcClient.getToken(adminUsername, adminPassword, GRANT_TYPE, appClientId, appSecret, SCOPES)
                      .getString(ACCESS_TOKEN_KEY);
+  }
+
+  public JsonWebToken parse(final String accessToken) {
+    try {
+      return parser.parse(accessToken);
+    } catch (final ParseException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public String getAuthorAccessToken() {

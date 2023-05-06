@@ -1,14 +1,14 @@
 package com.techeule.blogq.st.infra;
 
-import static java.lang.System.Logger.Level.INFO;
-
-import java.io.IOException;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import jakarta.ws.rs.client.ClientRequestContext;
 import jakarta.ws.rs.client.ClientResponseContext;
 import jakarta.ws.rs.client.ClientResponseFilter;
 import jakarta.ws.rs.ext.Provider;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import static java.lang.System.Logger.Level.INFO;
 
 @Provider
 public class LoggerClientResponseFilter implements ClientResponseFilter {

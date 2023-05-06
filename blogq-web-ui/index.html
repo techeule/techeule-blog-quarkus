@@ -1,13 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/svg+xml" href="/vite.svg"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BlogQ Web Editor</title>
+</head>
+<body class="is-full is-fullheight">
+<main>
+  <section class="hero is-fullheight">
+    <bq-navigation></bq-navigation>
+
+    <div class="hero-body">
+      <div id="main-application-view" class="container"></div>
+    </div>
+
+    <div class="footer">
+      <div class="hero-foot">
+        <bq-secured
+          required-permissions="posts:write,posts:read"
+          claim-name="groups">
+          <div>
+            Very secret content is only visible if the logged-in user have the permission of <code>posts:read</code>.
+          </div>
+        </bq-secured>
+      </div>
+    </div>
+
+  </section>
+</main>
+<script type="module" src="/src/main.ts"></script>
+</body>
 </html>

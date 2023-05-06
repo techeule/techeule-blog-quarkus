@@ -40,17 +40,23 @@
   <dependencies>
     <dependency>
       <groupId>com.techeule.blogq</groupId>
-      <artifactId>blogq-core</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.techeule.blogq</groupId>
       <artifactId>blogq-app</artifactId>
       <version>${project.version}</version>
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.quarkiverse.amazonservices</groupId>
+      <artifactId>quarkus-amazon-dynamodb</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>software.amazon.awssdk</groupId>
+      <artifactId>url-connection-client</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+    <!-- Build the Runtime -->
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-rest-client-jsonb</artifactId>
@@ -91,7 +97,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-jsonp</artifactId>
     </dependency>
-
     <dependency>
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-hibernate-validator</artifactId>
@@ -112,48 +117,6 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-arc</artifactId>
     </dependency>
-
-    <!-- Keycloak -->
-    <!--
-     <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-keycloak-authorization</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-keycloak-admin-client</artifactId>
-    </dependency>
-    -->
-
-    <!-- AWS Amazon -->
-    <!--
-    <dependency>
-      <groupId>io.quarkiverse.amazonservices</groupId>
-      <artifactId>quarkus-amazon-ses</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkiverse.amazonservices</groupId>
-      <artifactId>quarkus-amazon-s3</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.quarkiverse.amazonservices</groupId>
-      <artifactId>quarkus-amazon-dynamodb</artifactId>
-    </dependency>
-     -->
-
-    <!-- Testing -->
-    <!--
-    <dependency>
-      <groupId>io.quarkus</groupId>
-      <artifactId>quarkus-junit5</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.rest-assured</groupId>
-      <artifactId>rest-assured</artifactId>
-      <scope>test</scope>
-    </dependency>
-    -->
   </dependencies>
 
 
@@ -232,13 +195,21 @@
     <profile>
       <id>aws-lambda</id>
       <dependencies>
+        <!-- https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html -->
+        <dependency>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-amazon-lambda-http</artifactId>
+        </dependency>
         <dependency>
           <groupId>io.quarkus</groupId>
           <artifactId>quarkus-amazon-lambda</artifactId>
         </dependency>
+        <dependency>
+          <groupId>io.quarkus</groupId>
+          <artifactId>quarkus-logging-json</artifactId>
+        </dependency>
       </dependencies>
     </profile>
-
     <profile>
       <id>json-logging</id>
       <dependencies>

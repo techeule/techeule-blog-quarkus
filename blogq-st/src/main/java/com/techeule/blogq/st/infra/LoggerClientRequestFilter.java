@@ -1,16 +1,15 @@
 package com.techeule.blogq.st.infra;
 
-import static java.lang.System.Logger.Level.INFO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.ws.rs.client.ClientRequestContext;
+import jakarta.ws.rs.client.ClientRequestFilter;
+import jakarta.ws.rs.ext.Provider;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.ws.rs.client.ClientRequestContext;
-import jakarta.ws.rs.client.ClientRequestFilter;
-import jakarta.ws.rs.ext.Provider;
+import static java.lang.System.Logger.Level.INFO;
 
 @Provider
 public class LoggerClientRequestFilter implements ClientRequestFilter {
