@@ -51,7 +51,6 @@ pipeline {
           env.UI_CERTIFICATE_ONLY = "${params.UI_CERTIFICATE_ONLY}"
           env.AWS_CREDENTIALS = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_CREDENTIALS_ID')
           env.AWS_ACCOUNT_ID = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_ACCOUNT_ID')
-          env.AWS_DNS_ZONE_ID = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_DNS_ZONE_ID')
           env.DNS_RECORD_NAME = 'te-blogq-api'
           env.DNS_RECORD_NAME_UI = 'te-blogq'
           env.REGION = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_REGION')
