@@ -38,6 +38,11 @@ public class PostsService {
     return postsRepository.getById(id);
   }
 
+  @Counted(absolute = true, name = "post_delete_by_id")
+  public void deleteById(@NotBlank final String id) {
+     postsRepository.deleteById(id);
+  }
+
   @Counted(absolute = true, name = "post_get_all")
   public Set<PostEntity> getAll() {
     return postsRepository.findAll();

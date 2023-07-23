@@ -33,7 +33,17 @@ public class PostResource {
   @APIResponse(responseCode = "404", description = "blog post is not found")
   public Response get() {
     return postsService.getById(id)
-                       .map(p -> Response.ok(p).build())
-                       .orElse(Response.status(Response.Status.NOT_FOUND).build());
+      .map(p -> Response.ok(p).build())
+      .orElse(Response.status(Response.Status.NOT_FOUND).build());
+  }
+
+  @DELETE
+  @Operation(summary = "Delete a blog post by Id", description = "Delete a blog post by Id")
+  @APIResponse(responseCode = "200", description = "returns no content",
+    content = @Content(mediaType = MediaType.APPLICATION_JSON, schema = @Schema()))
+  @APIResponse(responseCode = "404", description = "blog post is not found")
+  public Response delete() {
+    postsService.deleteById(id);
+    return Response.accepted().build();
   }
 }

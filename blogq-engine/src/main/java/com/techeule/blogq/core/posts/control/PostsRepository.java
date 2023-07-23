@@ -11,7 +11,9 @@ public interface PostsRepository {
 
   String create(@NotNull final PostEntity newPost);
 
-  Optional<PostEntity> getById(@NotNull final String id);
+  Optional<PostEntity> getById(@NotBlank final String id);
 
   Set<PostEntity> findAll();
+
+  void deleteById(@NotBlank final String id);
 }

@@ -51,10 +51,13 @@ pipeline {
           env.UI_CERTIFICATE_ONLY = "${params.UI_CERTIFICATE_ONLY}"
           env.AWS_CREDENTIALS = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_CREDENTIALS_ID')
           env.AWS_ACCOUNT_ID = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_ACCOUNT_ID')
+          env.OIDC_CLIENT_SECRET = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'OIDC_CLIENT_SECRET')
           env.DNS_RECORD_NAME = 'te-blogq-api'
           env.DNS_RECORD_NAME_UI = 'te-blogq'
           env.REGION = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_REGION')
           env.ROOT_DOMAIN = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'ROOT_DOMAIN_NAME')
+          env.OIDC_ROOT_URL = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'OIDC_ROOT_URL')
+          env.OIDC_ISSUER_URL = "${env.OIDC_ROOT_URL}/realms/blogq"
 
           if ("_ALL_STACKS_" == params.STACK) {
             env.STACKS = String.join(" ", allowedStacks).replace("${params.STACK}" as CharSequence, "")
@@ -83,7 +86,7 @@ pipeline {
                 WEB_API_SUBDOMAIN    : "${DNS_RECORD_NAME}",
                 WEB_API_ROOTDOMAIN   : "${ROOT_DOMAIN}",
                 WEB_APP_BUCKET       : "${env.DNS_RECORD_NAME_UI}-${env.AWS_ACCOUNT_ID}-${env.ENV}",
-                WEB_API_OIDC_ISSUER  : "https://idp-staging.t12slabs.com/realms/blogq",
+                WEB_API_OIDC_ISSUER  : "${env.OIDC_ISSUER_URL}",
                 WEB_API_OIDC_AUDIENCE: "blogq-backend"
               ]
               for (final parameter in infrastructureParameters) {
@@ -183,9 +186,11 @@ pipeline {
             sh "./mvnw -V -T 1C -B --no-transfer-progress clean test-compile " +
               " failsafe:integration-test " +
               " failsafe:verify " +
-              " -pl :t12s-blogq-st " +
+              " -pl :blogq-st " +
               " -Dmaven.test.failure.ignore=true " +
-              " -Dapp.protocolAndHost=https://${env.DNS_RECORD_NAME}.${env.ROOT_DOMAIN} " +
+              " -Dapp.protocolAndHostAndPort=https://${env.DNS_RECORD_NAME}.${env.ROOT_DOMAIN} " +
+              " -Dt12s.oidc-root=${env.OIDC_ISSUER_URL} " +
+              " -Dapp.clientSecret=${env.OIDC_CLIENT_SECRET} " +
               " -Dmp.config.profile=lambda "
 
             junit '**/target/*-reports/*.xml'
@@ -200,7 +205,7 @@ pipeline {
 
 private void updateUiConfig() {
   sh "echo '\n_backendRootUrl = \"https://${env.DNS_RECORD_NAME}.${env.ROOT_DOMAIN}/resources\";\n' >> blogq-web-ui/src/configuration/entity/backend-config.ts"
-  sh "echo '\n_oidcKeycloakRootUrl = \"https://${env.DNS_RECORD_NAME_UI}.${env.ROOT_DOMAIN}\";\n' >> blogq-web-ui/src/configuration/entity/oidc-keycloak-config.ts"
+  sh "echo '\n_oidcKeycloakRootUrl = \"${env.OIDC_ROOT_URL}\";\n' >> blogq-web-ui/src/configuration/entity/oidc-keycloak-config.ts"
   sh "echo '\n_rootUrl = \"https://${env.DNS_RECORD_NAME_UI}.${env.ROOT_DOMAIN}\";\n' >> blogq-web-ui/src/configuration/entity/app-config.ts"
 
   try {

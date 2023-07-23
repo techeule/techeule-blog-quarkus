@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,12 +32,18 @@ class PostsResourceTestIT {
   private String authorizationHeaderValue;
   private JsonWebToken jsonWebToken;
   private String adminAccessToken;
+  private String postId;
 
   @BeforeEach
   void setUp() {
     adminAccessToken = tokenProvider.getAdminAccessToken();
     authorizationHeaderValue = tokenProvider.asBearerToken(adminAccessToken);
     jsonWebToken = tokenProvider.parse(adminAccessToken);
+  }
+
+  @AfterEach
+  void tearDown() {
+    postResource.deleteById(postId, authorizationHeaderValue);
   }
 
   @Test
@@ -50,7 +57,7 @@ class PostsResourceTestIT {
       final var afterCall = Instant.now();
       assertThat(response.getStatusInfo()).isEqualTo(Response.Status.CREATED);
       final var pathSegments = response.getLocation().getPath().split("/");
-      final var postId = pathSegments[pathSegments.length - 1];
+      this.postId = pathSegments[pathSegments.length - 1];
       assertPostSaved(postId, postMap, beforeCall, afterCall);
     }
   }

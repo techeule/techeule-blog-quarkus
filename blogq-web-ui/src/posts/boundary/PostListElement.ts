@@ -1,6 +1,6 @@
 import BoundaryElement from "../../BoundaryElement.ts";
 import {html} from "lit";
-import {fetchAllPosts} from "../control/PostsDispatcher.ts";
+import {deletePostById, fetchAllPosts} from "../control/PostsDispatcher.ts";
 import {readPosts, readPostsState} from "../control/PostsStateReader.ts";
 import {PostEntity} from "../entity/PostsState.ts";
 
@@ -18,6 +18,8 @@ class PostListElement extends BoundaryElement {
       <div class="container">
         ${this.refreshPosts()}
       </div>
+      <bq-post-error/>
+      
       ${postEntities}
     `;
   }
@@ -52,12 +54,19 @@ class PostListElement extends BoundaryElement {
             <p class="container"><span>Tags: </span>${tags}</p>
           </div>
           <div class="container">
-            <p>Created At: <em><time datetime="${createdAt}">${createdAt}</time></em></p>
+            <p>Created At: <em>
+              <time datetime="${createdAt}">${createdAt}</time>
+            </em></p>
             <p>Author-Id: ${createdBy}</p>
           </div>
+          <button class="button is-danger" @click="${(_e: UIEvent) => this.delete(post.id)}">Delete</button>
         </div>
       </article>
     `;
+  }
+
+  private delete(id: string) {
+    deletePostById(id);
   }
 }
 

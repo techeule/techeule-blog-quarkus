@@ -1,6 +1,7 @@
 package com.techeule.blogq.app.posts.control;
 
 import com.techeule.blogq.app.posts.control.dynamodb.CreatePostCommand;
+import com.techeule.blogq.app.posts.control.dynamodb.DeletePostByIdCommand;
 import com.techeule.blogq.app.posts.control.dynamodb.GetAllPostByCreatorIdCommand;
 import com.techeule.blogq.app.posts.control.dynamodb.GetPostByIdCommand;
 import com.techeule.blogq.app.posts.control.dynamodb.converters.DynamoDBEntryConverter;
@@ -8,6 +9,8 @@ import com.techeule.blogq.core.posts.control.PostsRepository;
 import com.techeule.blogq.core.posts.entity.PostEntity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.jwt.Claim;
 import org.eclipse.microprofile.jwt.Claims;
@@ -31,7 +34,7 @@ public class DynamoDbRepository implements PostsRepository {
   String userId;
 
   @Override
-  public String create(final PostEntity newPost) {
+  public String create(@NotNull final PostEntity newPost) {
     return CreatePostCommand.builder()
       .tableName(tableName)
       .dynamoDbClient(dynamoDbClient)
@@ -44,7 +47,7 @@ public class DynamoDbRepository implements PostsRepository {
   }
 
   @Override
-  public Optional<PostEntity> getById(final String id) {
+  public Optional<PostEntity> getById(@NotBlank final String id) {
     final var postEntity = GetPostByIdCommand.builder()
       .tableName(tableName)
       .dynamoDbClient(dynamoDbClient)
@@ -66,7 +69,25 @@ public class DynamoDbRepository implements PostsRepository {
       .creatorId(userId)
       .build()
       .execute();
-    return Set.of(postEntityList.toArray(new PostEntity[1]));
+
+    if (postEntityList.isEmpty()) {
+      return Set.of();
+    } else {
+      return Set.of(postEntityList.toArray(new PostEntity[1]));
+    }
+  }
+
+  @Override
+  public void deleteById(@NotBlank final String id) {
+    DeletePostByIdCommand.builder()
+      .tableName(tableName)
+      .dynamoDbClient(dynamoDbClient)
+      .dynamoDBEntryConverter(dynamoDBEntryConverter)
+      .postId(id)
+      .creatorId(userId)
+      .build()
+      .execute();
+
   }
 
 }

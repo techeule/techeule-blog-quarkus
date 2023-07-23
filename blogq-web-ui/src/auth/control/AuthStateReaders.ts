@@ -30,6 +30,11 @@ export const readUserProfile = (authState: AuthState): KeycloakProfile | undefin
   return authState.state?.profile;
 };
 
+export const readName = (authState: AuthState) => {
+  const userProfile = readUserProfile(authState);
+  return userProfile && `${userProfile.firstName} ${userProfile.lastName}`;
+}
+
 export const hasAnyPermission = (authState: AuthState, permissions: string[], keyInToken: string = permissionKeyInToken): boolean => {
   if (!permissions || permissions.length < 1) {
     return false;

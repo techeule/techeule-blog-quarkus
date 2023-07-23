@@ -89,8 +89,17 @@ export class OidcService {
       await this._oidcClient.updateToken(30);
     } catch (error) {
       console.error('Failed to refresh token:', error);
+      throw error;
     }
-    return tokenConsumer(this._oidcClient.token!);
+    return await tokenConsumer(this._oidcClient.token!);
+  }
+
+  accountUrl(){
+    return this._oidcClient.createAccountUrl()
+  }
+
+  register() {
+    return this._oidcClient.register();
   }
 
 }

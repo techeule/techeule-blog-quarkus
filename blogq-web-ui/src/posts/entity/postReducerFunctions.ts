@@ -16,6 +16,21 @@ export const setPostInState = (state: PostsState, postEntity: PostEntity) => {
   state.state = postsMap;
 }
 
+export const setErrorInState = (state: PostsState, error: any) => {
+  state.actionState = "Error";
+  state.errorMessage = error || "Unknown error!";
+}
+
+
+export const deletePostByIdInState = (state: PostsState, postId: string) => {
+  _fulfillState(state);
+  const postsMap = state.state || {};
+  if (Object.keys(postsMap).includes(postId)) {
+    delete postsMap[postId];
+  }
+  state.state = postsMap;
+}
+
 export const replaceAllPostsInState = (state: PostsState, postEntities: PostEntity[]) => {
   _fulfillState(state);
   const postsMap = {};

@@ -6,7 +6,8 @@ import {
   changeDraftPostSubTitle,
   changeDraftPostTags,
   changeDraftPostTitle,
-  changeDraftReset, createPost
+  changeDraftReset,
+  createPost
 } from "../control/PostsDispatcher.ts";
 
 class PostCreateElement extends BoundaryElement {
@@ -25,6 +26,9 @@ class PostCreateElement extends BoundaryElement {
       <div class="container  is-full-mobile is-max-desktop">
         <section class="box">
           <h1 class="title has-text-centered">Create new Post</h1>
+
+          <bq-post-error/>
+
           <form @submit=${(e: UIEvent) => this.submitForm(e)} action="#">
 
             <div class="field">
@@ -111,7 +115,7 @@ class PostCreateElement extends BoundaryElement {
     if (this.isPending()) {
       return html`
         <p class="control">
-          <progress class="progress is-large is-info" max="100">60%</progress>
+          <progress class="progress is-large is-primary" max="100">60%</progress>
         </p>
       `
     } else {
@@ -119,7 +123,7 @@ class PostCreateElement extends BoundaryElement {
         <p class="control">
           <input type="submit" class="button is-medium is-primary" value="Create"/>
         </p>
-        <p class="control">
+        <p class="control has-background-primary">
           <input type="reset" class="button is-medium is-primary" value="Clear Form" @click=${(e: UIEvent) => this.resetForm(e)}/>
         </p>
       `

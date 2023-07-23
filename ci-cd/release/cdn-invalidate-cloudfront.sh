@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
 DISTRIBUTION_ID=$(grep \
-  -e "t12s-blogq-app\\.cloudfrontdistributionidoutput = (.*)\$" \
+  -e "techeule-blogq-app\\.cloudfrontdistributionidoutput = (.*)\$" \
   -E \
   $1 | cut -d "=" -f 2)
 
 DISTRIBUTION_ID="${DISTRIBUTION_ID//[[:space:]]/}"
 
 if [[ "x${DISTRIBUTION_ID}" == "x" ]]; then
-  echo "No DISTRIBUTION_ID found for t12s-blogq-app.cloudfrontdistributionidoutput"
+  echo "No DISTRIBUTION_ID found for techeule-blogq-app.cloudfrontdistributionidoutput"
   exit 0
 fi
 

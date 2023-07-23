@@ -1,27 +1,21 @@
 package com.techeule.blogq.infra.resources;
 
-import java.time.Instant;
-import java.util.Map;
-import java.util.Objects;
-
-import org.jetbrains.annotations.NotNull;
-
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import software.amazon.awscdk.CfnOutput;
 import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.services.dynamodb.ITable;
-import software.amazon.awscdk.services.lambda.Alias;
-import software.amazon.awscdk.services.lambda.Architecture;
-import software.amazon.awscdk.services.lambda.CfnFunction;
-import software.amazon.awscdk.services.lambda.Code;
-import software.amazon.awscdk.services.lambda.Function;
-import software.amazon.awscdk.services.lambda.IFunction;
-import software.amazon.awscdk.services.lambda.IVersion;
 import software.amazon.awscdk.services.lambda.Runtime;
-import software.amazon.awscdk.services.lambda.Version;
+import software.amazon.awscdk.services.lambda.*;
 import software.constructs.Construct;
+
+import java.net.URI;
+import java.time.Instant;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 public class BackendApplicationLambda extends Construct {
 
@@ -39,6 +33,8 @@ public class BackendApplicationLambda extends Construct {
     this.props = props;
     configuration = Map.of(
       "QUARKUS_PROFILE", "lambda",
+      "T12S_OIDC_ROOT", props.getOidcIssuer().toString(),
+      "MP_JWT_VERIFY_AUDIENCES", String.join(",", props.getJwtAudience()),
       "TZ", "Europe/Berlin",
       "JAVA_TOOL_OPTIONS", "-XX:+TieredCompilation -XX:TieredStopAtLevel=1",
       "BLOGQ_STORAGE_DYNAMODB_TABLE_NAME", props.getTable().getTableName(),
@@ -51,15 +47,15 @@ public class BackendApplicationLambda extends Construct {
 
   void setupLambda() {
     function = Function.Builder.create(this, props.getFunctionName())
-                               .runtime(Runtime.JAVA_17)
-                               .architecture(getArchitecture())
-                               .code(props.getCode())
-                               .handler(QUARKUS_REQUEST_HANDLER)
-                               .memorySize(props.getMemory())
-                               .functionName(props.getFunctionName())
-                               .environment(configuration)
-                               .timeout(Duration.seconds(props.getTimeoutSeconds()))
-                               .build();
+      .runtime(Runtime.JAVA_17)
+      .architecture(getArchitecture())
+      .code(props.getCode())
+      .handler(QUARKUS_REQUEST_HANDLER)
+      .memorySize(props.getMemory())
+      .functionName(props.getFunctionName())
+      .environment(configuration)
+      .timeout(Duration.seconds(props.getTimeoutSeconds()))
+      .build();
 
     props.getTable().grantReadWriteData(function);
 
@@ -69,8 +65,8 @@ public class BackendApplicationLambda extends Construct {
     }
 
     CfnOutput.Builder.create(this, props.getFunctionName() + "-out")
-                     .value(function.getFunctionArn())
-                     .build();
+      .value(function.getFunctionArn())
+      .build();
   }
 
   private Architecture getArchitecture() {
@@ -91,9 +87,9 @@ public class BackendApplicationLambda extends Construct {
 
       // a fresh logicalId enforces code redeployment
       return Version.Builder.create(this, uniqueLogicalId)
-                            .lambda(function)
-                            .description(props.getFunctionName() + " SnapStart " + uniquenessString)
-                            .build();
+        .lambda(function)
+        .description(props.getFunctionName() + " SnapStart " + uniquenessString)
+        .build();
     }
 
     throw new IllegalStateException("Can not create : " + uniqueLogicalId + '.');
@@ -101,10 +97,10 @@ public class BackendApplicationLambda extends Construct {
 
   private Alias createAlias(final IVersion version) {
     return Alias.Builder.create(this, props.getFunctionName() + "SnapStartAlias")
-                        .aliasName("SnapStartAlias")
-                        .description("this alias is required for SnapStart")
-                        .version(version)
-                        .build();
+      .aliasName("SnapStartAlias")
+      .description("this alias is required for SnapStart")
+      .version(version)
+      .build();
   }
 
   @Builder
@@ -118,5 +114,7 @@ public class BackendApplicationLambda extends Construct {
     private final ITable table;
     private final Code code;
     protected final String deploymentEnvironment;
+    private final URI oidcIssuer;
+    private final Set<String> jwtAudience;
   }
 }

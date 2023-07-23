@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import software.amazon.awscdk.CfnOutput;
 import software.amazon.awscdk.Duration;
+import software.amazon.awscdk.RemovalPolicy;
+import software.amazon.awscdk.services.apigatewayv2.CfnStage;
 import software.amazon.awscdk.services.apigatewayv2.alpha.*;
 import software.amazon.awscdk.services.apigatewayv2.authorizers.alpha.HttpJwtAuthorizer;
 import software.amazon.awscdk.services.apigatewayv2.integrations.alpha.HttpLambdaIntegration;
@@ -11,6 +13,8 @@ import software.amazon.awscdk.services.certificatemanager.Certificate;
 import software.amazon.awscdk.services.certificatemanager.CertificateValidation;
 import software.amazon.awscdk.services.certificatemanager.ICertificate;
 import software.amazon.awscdk.services.lambda.IFunction;
+import software.amazon.awscdk.services.logs.LogGroup;
+import software.amazon.awscdk.services.logs.RetentionDays;
 import software.amazon.awscdk.services.route53.*;
 import software.amazon.awscdk.services.route53.targets.ApiGatewayv2DomainProperties;
 import software.constructs.Construct;
@@ -77,15 +81,17 @@ public class BackendApplicationWebApi extends Construct {
       .build();
 
     final var lambdaIntegration = new HttpLambdaIntegration("DefaultIntegration", props.getFunction());
-    final var authorizer = HttpJwtAuthorizer.Builder
-      .create("BlogQ-HTTP-JWT-Authorizer", props.getOidcIssuer().toString())
+
+    final var jwtAuthorizer = HttpJwtAuthorizer.Builder.create("BlogQ-JWT-Authorizer", props.getOidcIssuer().toString())
+      .authorizerName("BlogQ-JWT-Authorizer")
       .jwtAudience(new ArrayList<>(props.getJwtAudience()))
       .build();
 
     final var api = HttpApi.Builder
       .create(this, "HttpApi-BlogQ-Backend")
       .defaultIntegration(lambdaIntegration)
-      .defaultAuthorizer(authorizer)
+      .defaultAuthorizationScopes(new ArrayList<>(props.getJwtScopes()))
+      .defaultAuthorizer(jwtAuthorizer)
       .defaultDomainMapping(
         DomainMappingOptions.builder()
           .domainName(domainName)
@@ -94,12 +100,32 @@ public class BackendApplicationWebApi extends Construct {
       .corsPreflight(corsPreflight)
       .build();
 
+    final var logGroup = LogGroup.Builder.create(this, "HttpApi-BlogQ-Backend-Logs")
+      .retention(RetentionDays.ONE_MONTH)
+      .removalPolicy(RemovalPolicy.DESTROY)
+      .build();
+
+    if (api.getDefaultStage().getNode().getDefaultChild() instanceof final CfnStage cfnStage) {
+      cfnStage.setAccessLogSettings(CfnStage.AccessLogSettingsProperty.builder()
+        .destinationArn(logGroup.getLogGroupArn())
+        .format("{\"requestId\":\"$context.requestId\",\"ip\":\"$context.identity.sourceIp\",\"requestTime\":\"$context.requestTime\",\"httpMethod\":\"$context.httpMethod\",\"routeKey\":\"$context.routeKey\",\"status\":\"$context.status\",\"protocol\":\"$context.protocol\",\"responseLength\":\"$context.responseLength\",\"error_message\":\"$context.error.message\",\"error_messageString\":\"$context.error.messageString\",\"error_responseType\":\"$context.error.responseType\",\"authorizer_error\":\"$context.authorizer.error\",\"principalId\":\"$context.authorizer.principalId\",\"dataProcessed\":\"$context.dataProcessed\",\"basePathMatched\":\"$context.customDomain.basePathMatched\",\"domainName\":\"$context.domainName\",\"sub\":\"$context.authorizer.claims.sub\",\"iss\":\"$context.authorizer.claims.iss\",\"aud\":\"$context.authorizer.claims.aud\"}")
+        .build());
+    }
+
     final var noneAuthorizer = new HttpNoneAuthorizer();
 
     api.addRoutes(AddRoutesOptions
       .builder()
       .methods(List.of(HttpMethod.OPTIONS))
       .path("/{proxy+}")
+      .authorizer(noneAuthorizer)
+      .integration(lambdaIntegration)
+      .build());
+
+    api.addRoutes(AddRoutesOptions
+      .builder()
+      .methods(List.of(HttpMethod.GET))
+      .path("/q/health")
       .authorizer(noneAuthorizer)
       .integration(lambdaIntegration)
       .build());
@@ -131,5 +157,6 @@ public class BackendApplicationWebApi extends Construct {
     private final Set<String> allowedOrigins;
     private final URI oidcIssuer;
     private final Set<String> jwtAudience;
+    private final Set<String> jwtScopes;
   }
 }

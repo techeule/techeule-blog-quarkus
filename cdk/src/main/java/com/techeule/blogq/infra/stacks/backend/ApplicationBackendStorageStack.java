@@ -25,7 +25,7 @@ public class ApplicationBackendStorageStack extends Stack {
     final var storageProps = BackendStorage.Props
       .builder()
       .tableName(APP_NAME)
-      .provisionedBilling(true)
+      .provisionedBilling(false)
       .minReadCapacity(1)
       .maxReadCapacity(4)
       .utilizationRead(80)

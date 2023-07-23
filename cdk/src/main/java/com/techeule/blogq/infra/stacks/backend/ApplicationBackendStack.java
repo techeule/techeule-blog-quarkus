@@ -1,19 +1,18 @@
 package com.techeule.blogq.infra.stacks.backend;
 
-import java.net.URI;
-import java.util.Objects;
-import java.util.Set;
-
 import com.techeule.blogq.infra.resources.BackendApplicationLambda;
 import com.techeule.blogq.infra.resources.BackendApplicationWebApi;
 import com.techeule.blogq.infra.resources.BackendStorage;
-import org.jetbrains.annotations.NotNull;
-
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.lambda.Code;
 import software.constructs.Construct;
+
+import java.net.URI;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 public class ApplicationBackendStack extends Stack {
@@ -66,6 +65,8 @@ public class ApplicationBackendStack extends Stack {
       .withSnapStart(true)
       .table(backendStorage.getTable())
       .deploymentEnvironment(deploymentEnvironment)
+      .oidcIssuer(oidcIssuer)
+      .jwtAudience(jwtAudience)
       .build();
     backendApplicationLambda = new BackendApplicationLambda(this, "BlogQLambda", lambdaProps);
 
@@ -79,6 +80,7 @@ public class ApplicationBackendStack extends Stack {
       .webApiSubdomain(subdomain)
       .oidcIssuer(oidcIssuer)
       .jwtAudience(jwtAudience)
+      .jwtScopes(Set.of("blogq"))
       .build();
     automatorWebApi = new BackendApplicationWebApi(this, "BlogQWeb", webApiProps);
   }

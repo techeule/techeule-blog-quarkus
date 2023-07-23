@@ -2,8 +2,8 @@ import {ActionReducerMapBuilder} from "@reduxjs/toolkit/src/mapBuilders.ts";
 import {Post, PostsState} from "./PostsState.ts";
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {postsSliceName} from "./PostsConstants.ts";
-import {createPost, fetchPostById, fetchPosts} from "./PostsApiClient.ts";
-import {replaceAllPostsInState, setPostInState} from "./postReducerFunctions.ts";
+import {createPost, deletePostById, fetchPostById, fetchPosts} from "./PostsApiClient.ts";
+import {deletePostByIdInState, replaceAllPostsInState, setErrorInState, setPostInState} from "./postReducerFunctions.ts";
 import {logout} from "../../auth/entity/AuthStoreSlice.ts";
 
 export const createPostAction = createAsyncThunk(postsSliceName + "/create",
@@ -18,10 +18,7 @@ const addReducersForCreatePostAction = (builder: ActionReducerMapBuilder<PostsSt
     console.debug({state, _action})
     state.actionState = "Pending";
   }).addCase(createPostAction.rejected, (state, action) => {
-    const error = JSON.parse(<string>action.payload)
-    console.debug({state, action, error})
-    state.actionState = "Error";
-    state.errorMessage = error.message;
+    setErrorInState(state, action.error.message);
   })
 }
 
@@ -37,10 +34,22 @@ const addReducersForFetchPostAction = (builder: ActionReducerMapBuilder<PostsSta
     console.debug({state, _action})
     state.actionState = "Pending";
   }).addCase(fetchPostAction.rejected, (state, action) => {
-    const error = JSON.parse(<string>action.payload)
-    console.debug({state, action, error})
-    state.actionState = "Error";
-    state.errorMessage = error.message;
+    setErrorInState(state, action.error.message);
+  })
+}
+
+export const deletePostAction = createAsyncThunk(postsSliceName + "/deleteById",
+  async (postId: string) => deletePostById(postId));
+
+const addReducersForDeletePostAction = (builder: ActionReducerMapBuilder<PostsState>) => {
+  builder.addCase(deletePostAction.fulfilled, (state, action) => {
+    console.debug({state, action})
+    deletePostByIdInState(state, action.payload);
+  }).addCase(deletePostAction.pending, (state, _action) => {
+    console.debug({state, _action})
+    state.actionState = "Pending";
+  }).addCase(deletePostAction.rejected, (state, action) => {
+    setErrorInState(state, action.error.message);
   })
 }
 
@@ -56,10 +65,7 @@ const addReducersForFetchPostsAction = (builder: ActionReducerMapBuilder<PostsSt
     console.debug({state, _action})
     state.actionState = "Pending";
   }).addCase(fetchPostsAction.rejected, (state, action) => {
-    console.debug({state, action})
-    // const error = JSON.parse(<string>action.payload)
-    // state.actionState = "Error";
-    // state.errorMessage = error.message;
+    setErrorInState(state, action.error.message);
   })
 }
 
@@ -76,4 +82,5 @@ export const extraReducers = (builder: ActionReducerMapBuilder<PostsState>) => {
   addReducersForCreatePostAction(builder);
   addReducersForFetchPostAction(builder);
   addReducersForFetchPostsAction(builder);
+  addReducersForDeletePostAction(builder);
 }

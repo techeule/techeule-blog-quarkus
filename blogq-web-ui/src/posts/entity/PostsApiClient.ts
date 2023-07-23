@@ -2,10 +2,23 @@ import {Post, PostEntity} from "./PostsState.ts";
 import {backendRootUrl} from "../../configuration/entity/backend-config.ts";
 import {withToken} from "../../auth/control/OidcService.ts";
 
+
+async function executeFetchRequest(url: RequestInfo | URL, request?: RequestInit) {
+  try {
+    return await fetch(url, request);
+  } catch (error: any) {
+    if (error && error.message && error.message != 'Failed to fetch') {
+      throw error;
+    } else {
+      throw new Error("Can not connect to the backend");
+    }
+  }
+}
+
 function _fetchByUrl(postUrl: URL): Promise<any> {
   return withToken(async (token) => {
     console.debug(`token=${token}`)
-    const fetchResponse = await fetch(postUrl, {
+    const fetchResponse = await executeFetchRequest(postUrl, {
       "method": "GET",
       headers: {
         "Accept": "application/json",
@@ -47,7 +60,8 @@ export const createPost = async (post: Post) => {
       body: JSON.stringify(post)
     };
 
-    const response = await fetch(url, request);
+    const response = await executeFetchRequest(url, request);
+
     if (response.status === 201 && response.headers.get('Location') != null) {
       return _fetchPostByUrl(new URL(response.headers.get('Location')!))
     } else {
@@ -70,3 +84,27 @@ export const fetchPosts = async () => {
   });
 }
 
+export const deletePostById = async (id: string) => {
+  const deleteUrl = backendRootUrl() + "/post/" + id;
+  return withToken(async (token) => {
+    console.debug(`token=${token}`)
+    const fetchResponse = await executeFetchRequest(deleteUrl, {
+      "method": "DELETE",
+      headers: {
+        "Accept": "application/json",
+        "Authorization": `Bearer ${token.trim()}`
+      }
+    })
+
+    if (fetchResponse.status === 202) {
+      return id;
+    } else if (fetchResponse.status === 404) {
+      throw new Error(JSON.stringify({
+        code: "TE-BlogQ-ACCESS-DELETE_POST",
+        message: "Credentials are wrong"
+      }))
+    }
+
+    throw new Error(JSON.stringify(await fetchResponse.json()))
+  })
+}

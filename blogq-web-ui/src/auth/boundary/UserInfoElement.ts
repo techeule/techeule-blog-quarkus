@@ -1,6 +1,7 @@
 import BoundaryElement from "../../BoundaryElement.ts";
 import {html} from "lit";
-import {readAuthState, readIsLoggedIn, readUserProfile} from "../control/AuthStateReaders.ts";
+import {readAuthState, readIsLoggedIn, readName, readUserProfile} from "../control/AuthStateReaders.ts";
+import oidcService from "../control/OidcService.ts";
 
 class UserInfoElement extends BoundaryElement {
 
@@ -30,18 +31,21 @@ class UserInfoElement extends BoundaryElement {
                           </figure>
                       </div>
                       <div class="media-content">
-                          <p class="title is-4">${userProfile.firstName} ${userProfile.lastName}</p>
+                          <p class="title is-4">${readName(this.state)}</p>
                           <p class="subtitle is-6">${userProfile.email} (${verified}verified)</p>
                       </div>
                   </div>
 
                   <div class="content">
-                    <p class="container">User-ID: ${userProfile.id}</p>
-                    <p class="container">Username: ${userProfile.username}</p>
+                      <p class="container">User-ID: ${userProfile.id}</p>
+                      <p class="container">Username: ${userProfile.username}</p>
                       <br>
                       <time datetime="${userProfile.createdTimestamp}">${userProfile.createdTimestamp}</time>
                   </div>
               </div>
+              <footer class="card-footer">
+                  <a href="${oidcService.accountUrl()}" target="_blank" class="card-footer-item">Edit</a>
+              </footer>
           </div>
       `;
     }
