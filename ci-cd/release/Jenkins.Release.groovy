@@ -35,7 +35,7 @@ pipeline {
       steps {
         script {
           final def buildsToCheck = [
-            "t12s-blogq/t12s-blogq-Branches/${env.FROM_BRANCH}".toString()
+            "T12S-BlogQ/T12S-BlogQ-Branches/${env.FROM_BRANCH}".toString()
           ]
           echo "buildsToCheck=${buildsToCheck}"
 
