@@ -80,7 +80,7 @@ public class ApplicationBackendStack extends Stack {
       .webApiSubdomain(subdomain)
       .oidcIssuer(oidcIssuer)
       .jwtAudience(jwtAudience)
-      .jwtScopes(Set.of("blogq"))
+      .jwtScopes(Set.of())
       .build();
     automatorWebApi = new BackendApplicationWebApi(this, "BlogQWeb", webApiProps);
   }
