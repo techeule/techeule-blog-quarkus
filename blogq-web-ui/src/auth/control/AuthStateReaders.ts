@@ -62,3 +62,24 @@ export const hasAnyPermission = (authState: AuthState, permissions: string[], ke
 
   return permissions.some(permission => permissionsInToken.indexOf(permission) > -1);
 };
+
+export const readUserPermissions = (authState: AuthState, keyInToken: string = permissionKeyInToken) => {
+  if (!authState || !authState.state || !authState.state.tokenParsed) {
+    return [];
+  }
+
+  const token = authState.state.tokenParsed || {};
+  const keys = Object.keys(token);
+
+  if (!keys.includes(keyInToken)) {
+    return [];
+  }
+
+  const permissionsInToken = token[keyInToken];
+  if (!Array.isArray(permissionsInToken)) {
+    return [`${permissionsInToken}`];
+  } else {
+    return permissionsInToken as string[];
+  }
+
+}

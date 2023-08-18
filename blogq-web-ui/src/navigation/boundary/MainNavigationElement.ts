@@ -29,9 +29,7 @@ class MainNavigationElement extends BoundaryElement {
     return html`
       <nav class="navbar" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
-          <a class="navbar-item" href="#">
-            ${appName()}
-          </a>
+          <a class="navbar-item" href="#">${appName()}</a>
 
           <a role="button" class="navbar-burger ${this.menuClassName}" aria-label="menu" aria-expanded="false"
              data-target="navbarBasicExample"
@@ -39,24 +37,23 @@ class MainNavigationElement extends BoundaryElement {
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
-          </a>
-        </div>
+          </a></div>
 
         <div id="navbarBasicExample" class="navbar-menu ${this.menuClassName}">
+          <!-- Menu on the left-side -->
           <div class="navbar-start">
             <a class="navbar-item" href="/">
               Home
             </a>
-
             <a class="navbar-item" href="/posts">
               Posts
             </a>
-
             <a class="navbar-item" href="/write-post">
               Write Post
             </a>
           </div>
 
+          <!-- Menu on the right-side -->
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
@@ -70,6 +67,7 @@ class MainNavigationElement extends BoundaryElement {
             </div>
           </div>
         </div>
+
       </nav>
     `;
   }
@@ -113,6 +111,5 @@ class MainNavigationElement extends BoundaryElement {
   }
 
 }
-
 
 customElements.define("bq-navigation", MainNavigationElement);

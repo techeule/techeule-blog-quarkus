@@ -58,7 +58,19 @@ pipeline {
           env.ROOT_DOMAIN = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'ROOT_DOMAIN_NAME')
           env.OIDC_ROOT_URL = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'OIDC_ROOT_URL')
           env.OIDC_ISSUER_URL = "${env.OIDC_ROOT_URL}/realms/blogq"
+          pom = readMavenPom(file: 'pom.xml')
+          env.POM_VERSION = (pom.version).toString() as String
+          env.APP_GIT_HASH = (sh(returnStdout: true, script: "git rev-parse --short HEAD") as String).trim()
 
+          try {
+            if (!("${GIT_TAG_NAME}" as String).isBlank() && !("${GIT_TAG_NAME}" as String).equalsIgnoreCase("null")) {
+              env.APP_VERSION = "${GIT_TAG_NAME}"
+            }
+          } catch (Exception exception) {
+            // Ignore exception
+            echo "${exception.message}"
+            env.APP_VERSION = "${env.POM_VERSION}; (${GIT_BRANCH.replace("origin/", "")}: ${env.APP_GIT_HASH}); (Build: ${BUILD_NUMBER})"
+          }
           if ("_ALL_STACKS_" == params.STACK) {
             env.STACKS = String.join(" ", allowedStacks).replace("${params.STACK}" as CharSequence, "")
           } else {
@@ -209,9 +221,9 @@ private void updateUiConfig() {
   sh "echo '\n_rootUrl = \"https://${env.DNS_RECORD_NAME_UI}.${env.ROOT_DOMAIN}\";\n' >> blogq-web-ui/src/configuration/entity/app-config.ts"
 
   try {
-    final def tagId = ("${params.GIT_BRANCH}" as String).replace("\"", "'").replace("\n", "").trim()
-    if (!"".equalsIgnoreCase(tagId) && !"null".equalsIgnoreCase(tagId)) {
-      sh "echo '\n_appVersion = \"${tagId}\"\n' >> blogq-web-ui/src/configuration/entity/app-config.ts"
+    final def appVersion = ("${env.APP_VERSION}" as String).replace("\"", "'").replace("\n", "").trim()
+    if (!"".equalsIgnoreCase(appVersion) && !"null".equalsIgnoreCase(appVersion)) {
+      sh "echo '\n_appVersion = \"${appVersion}\"\n' >> blogq-web-ui/src/configuration/entity/app-config.ts"
     }
   } catch (final _exception) {
     sh "echo '\n_appVersion = \"\"\n' >> blogq-web-ui/src/configuration/entity/app-config.ts"
