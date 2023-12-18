@@ -23,7 +23,7 @@ pipeline {
   }
 
   tools {
-    jdk 'jdk-17'
+    jdk 'jdk-21'
   }
 
   parameters {
@@ -66,7 +66,7 @@ pipeline {
             if (!("${GIT_TAG_NAME}" as String).isBlank() && !("${GIT_TAG_NAME}" as String).equalsIgnoreCase("null")) {
               env.APP_VERSION = "${GIT_TAG_NAME}"
             }
-          } catch (Exception exception) {
+          } catch (final Exception exception) {
             // Ignore exception
             echo "${exception.message}"
             env.APP_VERSION = "${env.POM_VERSION}; (${GIT_BRANCH.replace("origin/", "")}: ${env.APP_GIT_HASH}); (Build: ${BUILD_NUMBER})"
@@ -130,6 +130,9 @@ pipeline {
     }
 
     stage('deploy certificate') {
+      tools {
+        jdk 'jdk-17'
+      }
       steps {
         withAWS(credentials: "${env.AWS_CREDENTIALS}", region: "us-east-1") {
           script {
@@ -163,6 +166,9 @@ pipeline {
     }
 
     stage('deploy application') {
+      tools {
+        jdk 'jdk-17'
+      }
       when { expression { env.UI_CERTIFICATE_ONLY == "false" } }
       steps {
         withAWS(credentials: "${env.AWS_CREDENTIALS}", region: "${env.REGION}") {

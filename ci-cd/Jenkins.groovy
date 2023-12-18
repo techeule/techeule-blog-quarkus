@@ -8,7 +8,7 @@ pipeline {
   }
 
   tools {
-    jdk 'jdk-17'
+    jdk 'jdk-21'
   }
 
   stages {
@@ -21,7 +21,7 @@ pipeline {
 
     stage("Build and Test") {
       steps {
-        sh "./mvnw -V -T 1C -B --no-transfer-progress clean install -pl '!:blogq-st'"
+        sh "./mvnw -V -T 1C -B --no-transfer-progress clean install -pl '!:blogq-st,!:cdk'"
         // junit '**/target/*-reports/*.xml'
 
         sh "./mvnw -V -T 1C -B --no-transfer-progress versions:dependency-updates-report"
