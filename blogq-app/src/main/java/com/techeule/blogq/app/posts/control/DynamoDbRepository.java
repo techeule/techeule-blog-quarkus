@@ -8,6 +8,7 @@ import com.techeule.blogq.app.posts.control.dynamodb.converters.DynamoDBEntryCon
 import com.techeule.blogq.core.posts.control.PostsRepository;
 import com.techeule.blogq.core.posts.entity.PostEntity;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,7 +20,7 @@ import software.amazon.awssdk.services.dynamodb.DynamoDbClient;
 import java.util.Optional;
 import java.util.Set;
 
-@ApplicationScoped
+@RequestScoped
 public class DynamoDbRepository implements PostsRepository {
   @Inject
   @ConfigProperty(name = "blogq.storage.dynamodb.table.name", defaultValue = "T12S-Blogq")

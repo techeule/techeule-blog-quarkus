@@ -3,6 +3,7 @@ package com.techeule.blogq.core.posts.boundary;
 import com.techeule.blogq.core.posts.entity.Post;
 import com.techeule.blogq.core.posts.entity.PostEntity;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.*;
@@ -17,6 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 @RolesAllowed({"posts:read"})
+@RequestScoped
 public class PostResources {
   @Inject
   PostsService postsService;

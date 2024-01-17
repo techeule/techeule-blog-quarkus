@@ -4,7 +4,7 @@ import com.techeule.blogq.core.posts.control.PostsRepository;
 import com.techeule.blogq.core.posts.entity.Post;
 import com.techeule.blogq.core.posts.entity.PostEntity;
 import jakarta.annotation.security.RolesAllowed;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,7 +15,7 @@ import java.time.Instant;
 import java.util.Optional;
 import java.util.Set;
 
-@ApplicationScoped
+@RequestScoped
 @RolesAllowed("posts:read")
 public class PostsService {
 
