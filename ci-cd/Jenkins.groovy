@@ -8,7 +8,7 @@ pipeline {
   }
 
   tools {
-    jdk 'jdk-21'
+    jdk 'jdk-17'
   }
 
   stages {
@@ -24,7 +24,7 @@ pipeline {
         sh "./mvnw -V -T 1C -B --no-transfer-progress clean install -pl '!:blogq-st,!:cdk'"
         // junit '**/target/*-reports/*.xml'
 
-        sh "./mvnw -V -T 1C -B --no-transfer-progress versions:dependency-updates-report"
+        sh "./mvnw -V -T 1C -B --no-transfer-progress versions:dependency-updates-report -pl '!:blogq-st,!:cdk'"
         archiveArtifacts artifacts: "**/target/site/**"
 
         dir('blogq-web-ui') {
