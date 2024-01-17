@@ -49,8 +49,9 @@ pipeline {
           env.ENV = "${params.ENV}"
           env.DEP_ENV = "${env.ENV}"
           env.UI_CERTIFICATE_ONLY = "${params.UI_CERTIFICATE_ONLY}"
-          env.AWS_CREDENTIALS = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_CREDENTIALS_ID')
-          env.AWS_ACCOUNT_ID = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'AWS_ACCOUNT_ID')
+          env.AWS_CREDENTIALS = T12sContext.get("T12S_ACCOUNT", "${env.ENV}", 'AWS_CREDENTIALS_ID')
+          env.AWS_ACCOUNT_ID = T12sContext.get("T12S_ACCOUNT", "${env.ENV}", 'AWS_ACCOUNT_ID')
+          env.AWS_ROLE = T12sContext.get("T12S_ACCOUNT", "${env.ENV}", 'AWS_JENKINS_ROLE')
           env.OIDC_CLIENT_SECRET = T12sContext.get("T12S_BLOGQ", "${env.ENV}", 'OIDC_CLIENT_SECRET')
           env.DNS_RECORD_NAME = 'te-blogq-api'
           env.DNS_RECORD_NAME_UI = 'te-blogq'
@@ -134,11 +135,8 @@ pipeline {
         jdk 'jdk-17'
       }
       steps {
-        withAWS(credentials: "${env.AWS_CREDENTIALS}", region: "us-east-1") {
+        withAWS(credentials: "${env.AWS_CREDENTIALS}", role: "${env.AWS_ROLE}", roleAccount: "${env.AWS_ACCOUNT_ID}", region: "us-east-1") {
           script {
-            echo "#Bootstrap CDK "
-            sh "cdk bootstrap aws://${env.AWS_ACCOUNT_ID}/us-east-1"
-
             echo "#Run CDK to deploy certificate for the WebApp UI"
             sh "mvn -B --no-transfer-progress -V -T 1C clean -pl :cdk && rm -rf cdk/cdk.out || true "
             dir('cdk') {
@@ -171,11 +169,8 @@ pipeline {
       }
       when { expression { env.UI_CERTIFICATE_ONLY == "false" } }
       steps {
-        withAWS(credentials: "${env.AWS_CREDENTIALS}", region: "${env.REGION}") {
+        withAWS(credentials: "${env.AWS_CREDENTIALS}", role: "${env.AWS_ROLE}", roleAccount: "${env.AWS_ACCOUNT_ID}", region: "${env.REGION}") {
           script {
-            echo "#Bootstrap CDK "
-            sh "cdk bootstrap aws://${env.AWS_ACCOUNT_ID}/${env.REGION}"
-
             sedReplaceInFile("__WEB_APP_CERT_ARN__", "${env.UI_CERT_ARN}", "${env.infrastructureConfigFile}")
 
             archiveArtifacts artifacts: "${env.infrastructureConfigFile}"
