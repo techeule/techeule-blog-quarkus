@@ -7,7 +7,7 @@
   <parent>
     <groupId>com.techeule.blogq</groupId>
     <artifactId>techeule-blog-quarkus</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
